@@ -1,0 +1,27 @@
+{
+  "name": "zvargs",
+  "version": "0.1.0",
+  "description": "Zhou's node.js module for parsing variable arguments of functions.",
+  "main": "zvargs.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/joeyu/zvargs.git"
+  },
+  "keywords": [
+    "arguments",
+    "var_args",
+    "vargs"
+  ],
+  "author": "Zhou Yu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joeyu/zvargs/issues"
+  },
+  "homepage": "https://github.com/joeyu/zvargs"
+}
