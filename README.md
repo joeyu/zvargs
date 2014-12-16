@@ -81,6 +81,7 @@ After all checks complete, an `Arguments` object will store all matched `argumen
         {'name': 'arg2', 'type':    'string',   'optional': true},
         {'name': 'arg3', 'type':    'function'},
         {'name': 'arg4', 'object':  'RegExp'},
+    ]
 
     ```
 
