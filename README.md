@@ -15,6 +15,7 @@ var zvargs = require('zvargs');
 ##Class
 Arguments
 
+<a name="Methods">
 ###Methods
 
 Method                                  | Brief
@@ -37,9 +38,9 @@ where, the modified after ':' is argument type or class, and the arguments enclo
 
 The specification of a function variable arguments prototype is specified by an array called `spec`, which is passed to this contructor. One item of `spec` corresponds to one argument of the function arguments prototype.
   
-This constructor starts parsing by picking up `arguments[0]` and checking if type and class of it matches those of `spec[0]`. If the two match, it means the first argument of the function variable arguments prototype, which defined by `spec[0]`, is passed as `arguments[0]`, and `arguments[0]` will be stored as a new property of `this`,  and the constructior moves forwards to check `arguments[1]` with `spec[1]`. If the two don't match, and if `spec[0]` has the `optional` property and its value is `true`, which means `spec[0]` is optional and this function call doesn't specify it, then the constructor will move forward to check `spec[1]`..., the process will continue until the contructor finds a match or meets the end of `spec`.
+This constructor starts parsing by picking up `arguments[0]` and checking if type and class of it matches those of `spec[0]`. If the two match, it means the first argument of the function variable arguments prototype, which defined by `spec[0]`, is specified as `arguments[0]`, and `arguments[0]` will be stored as a new property of `this`,  and the constructior moves forward to check `arguments[1]` with `spec[1]`. If the two don't match, and if `spec[0]` has the `optional` property and its value is `true`, which means `spec[0]` is optional and this function call doesn't specify it, then the constructor will move forward to check `spec[1]`..., the process will continue until the contructor finds a match or meets the end of `spec`.
 
-After all checks complete, an `Arguments` object will store all matched `arguments` in its properties. However, there may be some passed arguments that aren't defined by `spec` and thus have never been checked, e.g. the `...` arguments would be unlimited and undefined by `spec`. In such a case, a special `Array` property called '__extra' is used to store those remaining arguments.
+After all checks complete, an `Arguments` object will store all matched `arguments` in its properties. However, there may be some passed arguments that aren't defined by `spec` and thus have never been checked, e.g. the [`...`] arguments would be optional and unlimited number of instances, and be undefined by `spec`. In such a case, a special `Array` property called '__extra' is used to store those remaining arguments.
 
 #####Arguments
 * `funcArgs` : `Object`
@@ -82,7 +83,6 @@ After all checks complete, an `Arguments` object will store all matched `argumen
         {'name': 'arg3', 'type':    'function'},
         {'name': 'arg4', 'object':  'RegExp'},
     ]
-
     ```
 
 
@@ -102,8 +102,7 @@ After all checks complete, an `Arguments` object will store all matched `argumen
     ]);
 
     console.log(args);
-
-)(
+})(
     1, 
     ['hello', 'zvargs'],
     // args2 isn't specified.
@@ -114,7 +113,6 @@ After all checks complete, an `Arguments` object will store all matched `argumen
     'extra_arg0',
     'extra_arg1',
 );
-
 ```
 
 The above code snippet will print out:
