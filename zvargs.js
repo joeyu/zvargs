@@ -38,6 +38,15 @@ function Arguments(args, spec) {
         }
     }
 
+    // Checks if all mandatory arguments are passed
+    for(;j < spec.length; j++) {
+       if (!spec[j].hasOwnProperty('optional') || !spec[j].optional) {
+           throw "Error: not all mandatory arguments are passed";
+           continue;
+       }
+    }
+
+
     this.__extra = null;
     // Stores remaining args items in `extra`.
     if (i < args.length) {

@@ -27,15 +27,19 @@ Method                                  | Brief
 [Go back to **Methods**](#Methods)
 <a name="Arguments.constructor" />
 ####Arguments(funcArgs, spec)
-The constructor parses a function's variable arguments according to the specification of the function's prototype.
+This constructor parses a function call's passed `arguments`, which is passed by `funcArgs`,  according to the specification of the function variable arguments prototype.
 
-Variable arguments refer to `arguments` that mix mandatory ones and optional ones. The following is an example:
+Function variable arguments prototype refers to arguments prototype that mix mandatory arguments and optional arguments. The following is an example:
 
->function f(arg0, [arg1], [arg2], arg3, arg4, ...);   
+>function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
 
-where the arguments enclosed in the square brackets are optional.
+where, the modified after ':' is argument type or class, and the arguments enclosed in the square brackets are optional and may not be passed when the `func` function is called.
 
-After parsing, an `Arguments` object will store the arguments in its properties as defined by `spec`. There may be some arguments that aren't defined by `spec`, i.e. the length of `arguments` is lokA special `Array` property called '__extra' is used to store those remaining arguments
+The specification of a function variable arguments prototype is specified by an array called `spec`, which is passed to this contructor. One item of `spec` corresponds to one argument of the function arguments prototype.
+  
+This constructor starts parsing by picking up `arguments[0]` and checking if type and class of it matches those of `spec[0]`. If the two match, it means the first argument of the function variable arguments prototype, which defined by `spec[0]`, is passed as `arguments[0]`, and `arguments[0]` will be stored as a new property of `this`,  and the constructior moves forwards to check `arguments[1]` with `spec[1]`. If the two don't match, and if `spec[0]` has the `optional` property and its value is `true`, which means `spec[0]` is optional and this function call doesn't specify it, then the constructor will move forward to check `spec[1]`..., the process will continue until the contructor finds a match or meets the end of `spec`.
+
+After all checks complete, an `Arguments` object will store all matched `arguments` in its properties. However, there may be some passed arguments that aren't defined by `spec` and thus have never been checked, e.g. the `...` arguments would be unlimited and undefined by `spec`. In such a case, a special `Array` property called '__extra' is used to store those remaining arguments.
 
 #####Arguments
 * `funcArgs` : `Object`
@@ -50,7 +54,7 @@ After parsing, an `Arguments` object will store the arguments in its properties 
     
   * `name` : `String`
         
-        The name of the argument. If an argument matches the `spec` item, a new property called `name` will be added to the `Arguments` object, and its value will be the matched argument.
+        The name of the argument. If an argument matches the `spec` item, a new property called `name` will be added to the `this` object, and its value will be the matched argument.
 
   * `type` : `String`
   
@@ -63,23 +67,52 @@ After parsing, an `Arguments` object will store the arguments in its properties 
   * [`optional=false`] : `Boolean`
 
        This property specifies if the argument is optional. If this property isn't specified, the argument is mandatory by default.
-        
+
+    Example: for a function variable prototype as follows,
+
+    >function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
+
+    The `spec` will be:
+
+    ```javascript
+    [
+        {'name': 'arg0', 'type':    'number'},
+        {'name': 'arg1', 'object':  'Array',    'optional': true},
+        {'name': 'arg2', 'type':    'string',   'optional': true},
+        {'name': 'arg3', 'type':    'function'},
+        {'name': 'arg4', 'object':  'RegExp'},
+
+    ```
+
+
 
 ###Examples
 
 ```javascript
-(function() { // (int1, [int2], [str1], str2, ...)
+(function() {
     var zvargs = require('zvargs');
+    //function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
     var args = new zvargs.Arguments(arguments, [
-        {'name': 'int1', 'type': 'number'},
-        {'name': 'int2', 'type': 'number', 'optional': true},
-        {'name': 'str1', 'type': 'string', 'optional': true},
-        {'name': 'str2', 'type': 'string'},
+        {'name': 'arg0', 'type':    'number'},
+        {'name': 'arg1', 'object':  'Array',    'optional': true},
+        {'name': 'arg2', 'type':    'string',   'optional': true},
+        {'name': 'arg3', 'type':    'function'},
+        {'name': 'arg4', 'object':  'RegExp'},
     ]);
 
     console.log(args);
 
-)(1, 'a', 'b', 2, 3, 4, 'c', 'd');
+)(
+    1, 
+    ['hello', 'zvargs'],
+    // args2 isn't specified.
+    function() {
+        if (arg1) console.log(arg1);
+    }, 
+    /search/,
+    'extra_arg0',
+    'extra_arg1',
+);
 
 ```
 
@@ -87,11 +120,11 @@ The above code snippet will print out:
 
 ```
 {
-    'int1': 1,
-    'int2': null,
-    'str1': 'a',
-    'str2': 'b',
-    '__extra': [2, 3, 4, 'c', 'd']
+    'arg0': 1,
+    'arg1': ['hello', 'zvargs'],
+    'arg2': function() { if (arg1) console.log(arg1); }, 
+    'arg3': /search/,
+    '__extra': ['extra_arg0', 'extra_arg1']
 }
 ```
 
