@@ -1,9 +1,9 @@
 // function (must0, [option0], [option1], must1, [options_extra...])
 
 
-module.exports.Arguments = Arguments;
+module.exports.VArgs = VArgs;
 
-function Arguments(args, spec) {
+function VArgs(args, spec) {
     var i, j;
     for (j = 0; j < spec.length; j ++) {
         this[spec[j].name] = null;
@@ -14,15 +14,16 @@ function Arguments(args, spec) {
             var isMatched = true;
 
             // test type
-            if (spec[j].hasOwnProperty('type') && typeof args[i] !== spec[j]['type']) {
-                isMatched = false;
+            if (typeof spec[j].type === 'string') {
+               if (typeof args[i] !== spec[j].type) {
+                   isMatched = false;
+               }
+            } else if ( spec[j].type instanceof Function) {
+                if (!(args[i] instanceof spec[j].type)) {
+                    isMatched = false;
+                }
             }
-            
-            // test class
-            if (isMatched && spec[j].hasOwnProperty('class') && !(args[i] instanceof spec[j]['class'])) {
-                isMatched = false;
-            }
-            
+
             if (!isMatched) {
                if (spec[j].hasOwnProperty('optional') && spec[j].optional) {
                     ++ j;
