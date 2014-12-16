@@ -59,11 +59,11 @@ After all checks complete, an `Arguments` object will store all matched `argumen
 
   * `type` : `String`
   
-        `typeof` the argument. This property is used when the argument is some javascript built-in type other tan 'object'.
+        The type of the argument. This property is used to specify the javascript built-in type that `typeof` the argument is. If the type of the argument is `'object'`, the `class` property can be used to more precisely specify what class it is `instanceof`, and this property can be ignored; otherwise, the `class` property isn't applicable. 
 
   * `class` : `Function` 
   
-        If the type of the argument is `object`, this property is used to specify of which class the argument is an instance.
+        If the type of the argument is `object`, this property is used to specify the class that the argument is `instanceof`. If this property is specified, there is no need to specify the `type` property, as it is assumed to be `'object'`.
 
   * [`optional=false`] : `Boolean`
 
