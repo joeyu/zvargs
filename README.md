@@ -43,9 +43,9 @@ This constructor starts parsing by picking up `arguments[0]` and checking if typ
 After all checks complete, an `VArgs` object will store all matched `arguments` in its properties. However, there may be some passed arguments that aren't defined by `spec` and thus have never been checked, e.g. the [`...`] arguments would be optional and unlimited number of instances, and be undefined by `spec`. In such a case, a special `Array` property called `__extra` is used to store those remaining arguments.
 
 #####Arguments
-* `funcArgs` : `Object`
+* `args` : `Object`
 
-    The function's [`arguments`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments).
+    The [`arguments`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments) of the function to parse.
 
 * `spec` : `Array`
 
