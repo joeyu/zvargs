@@ -88,9 +88,8 @@ After all checks complete, an `VArgs` object will store all matched `arguments` 
 ###Examples
 
 ```javascript
-(function() {
+(function( /* arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...*/ ) {
     var zvargs = require('zvargs');
-    //function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
     var args = new zvargs.VArgs(arguments, [
         {'name': 'arg0', 'type':    'number'},
         {'name': 'arg1', 'type':    Array,      'optional': true},
