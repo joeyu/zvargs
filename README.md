@@ -108,7 +108,7 @@ After all checks complete, an `VArgs` object will store all matched `arguments` 
     }, 
     /search/,
     'extra_arg0',
-    'extra_arg1',
+    'extra_arg1'
 );
 ```
 
