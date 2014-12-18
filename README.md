@@ -118,8 +118,9 @@ The above code snippet will print out:
 {
     'arg0': 1,
     'arg1': ['hello', 'zvargs'],
-    'arg2': function() { if (arg1) console.log(arg1); }, 
-    'arg3': /search/,
+    'arg2': null,
+    'arg3': function() { if (arg1) console.log(arg1); }, 
+    'arg4': /search/,
     '__extra': ['extra_arg0', 'extra_arg1']
 }
 ```
