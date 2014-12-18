@@ -34,13 +34,15 @@ Function's variable arguments prototype refers to arguments prototype that mix m
 
 >function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
 
-where, the modified after ':' of each argument specify argument type (class), and the arguments enclosed in the square brackets are optional and may not be passed when the `func` function is called.
+where, the modifier after ':' of each argument specifies the argument's type (class), and the arguments enclosed in the square brackets are optional and may not be passed when the `func` function is called.
 
 The specification of a function's variable arguments prototype is specified by an array as the `spec` argument passed to this contructor. Each item of `spec` corresponds to one argument of the function's arguments prototype.
   
-This constructor starts parsing by picking up `arguments[0]` and checking if type of it matches those of `spec[0]`. If the two match, it means the first argument of the function variable arguments prototype, which defined by `spec[0]`, is specified as `arguments[0]`, and `arguments[0]` will be stored as a new property of `this`,  and the constructior moves forward to check `arguments[1]` with `spec[1]`. If the two don't match, and if `spec[0]` has the `optional` property and its value is `true`, which means `spec[0]` is optional and this function call doesn't specify it, then the constructor will move forward to check `spec[1]`..., the process will continue until the contructor finds a match or meets the end of `spec`.
+This constructor starts parsing by picking up `arguments[0]` and checking if the type of it matches that of `spec[0]`. If the two match, it means the first argument of the function variable arguments prototype, which defined by `spec[0]`, is specified as `arguments[0]`, and `arguments[0]` will be stored as the value of a new property `this[spec[0].name]`,  and the constructior moves forward to check `arguments[1]` with `spec[1]`, and so on. If the two don't match, and if `spec[0]` has the `optional` property and its value is `true`, which means `spec[0]` is optional and this function call doesn't specify it, then the constructor will move forward to check `spec[1]`, and so on. The process will continue until the contructor finds a match or meets the end of `spec`.
 
 After all checks complete, an `VArgs` object will store all matched `arguments` in its properties. However, there may be some passed arguments that aren't defined by `spec` and thus have never been checked, e.g. the [`...`] arguments would be optional and unlimited number of instances, and be undefined by `spec`. In such a case, a special `Array` property called `__extra` is used to store those remaining arguments.
+
+All mandatory arguments defined in `spec` must be passed in the function call, otherwise, an error will be thrown out.
 
 #####Arguments
 * `args` : `Object`
