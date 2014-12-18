@@ -1,6 +1,6 @@
 {
   "name": "zvargs",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Zhou's node.js module for parsing variable arguments of functions.",
   "main": "zvargs.js",
   "directories": {
