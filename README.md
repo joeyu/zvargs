@@ -36,7 +36,7 @@ Function's variable arguments prototype refers to arguments prototype that mix m
 
 where, the modifier after ':' of each argument specifies the argument's type (class), and the arguments enclosed in the square brackets are optional and may not be passed when the `func` function is called.
 
-The specification of a function's variable arguments prototype is specified by an array as the `spec` argument passed to this contructor. Each item of `spec` corresponds to one argument of the function's arguments prototype.
+The specification of a function's variable arguments prototype can be specified by an array as the `spec` argument passed to this contructor. Each item of `spec` corresponds to one argument of the function's arguments prototype. To reduce typing effort, the `spec` can also be specified as a string. 
   
 This constructor starts parsing by picking up `arguments[0]` and checking if the type of it matches that of `spec[0]`. If the two match, it means the first argument of the function variable arguments prototype, which defined by `spec[0]`, is specified as `arguments[0]`, and `arguments[0]` will be stored as the value of a new property `this[spec[0].name]`,  and the constructor moves forward to check `arguments[1]` with `spec[1]`, and so on. If the two don't match, and if `spec[0]` has the `optional` property and its value is `true`, which means `spec[0]` is optional and this function call doesn't specify it, then the constructor will move forward to check `spec[1]`, and so on. The process will continue until the contructor finds a match or meets the end of `spec`.
 
@@ -49,7 +49,7 @@ All mandatory arguments defined in `spec` must be passed in the function call, o
 
     The [`arguments`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments) of the function to parse.
 
-* `spec` : `Array`
+* `spec` : `Array` | `String`
 
     `spec` is an array, of which each item defines an argument's specification. The whole array defines all arguments of a function prototype in order.
 
@@ -84,21 +84,23 @@ All mandatory arguments defined in `spec` must be passed in the function call, o
         {'name': 'arg4', 'type':    RegExp},
     ]
     ```
+    
+    alternatively, can simply be:
 
+    ```javascript
+    "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp"
 
+    ```
 
 ###Examples
 
 ```javascript
 (function( /* arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...*/ ) {
     var zvargs = require('zvargs');
-    var args = new zvargs.VArgs(arguments, [
-        {'name': 'arg0', 'type':    'number'},
-        {'name': 'arg1', 'type':    Array,      'optional': true},
-        {'name': 'arg2', 'type':    'string',   'optional': true},
-        {'name': 'arg3', 'type':    'function'},
-        {'name': 'arg4', 'type':    RegExp},
-    ]);
+    var args = new zvargs.VArgs(
+        arguments, 
+        "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp"
+    );
 
     console.log(args);
 })(
@@ -127,5 +129,41 @@ The above code snippet will print out:
 }
 ```
 
+Alternatively, another approach to use can be:
 
+```javascript
+var zvargs = require('zvargs');
+function func(arg0, arg1, arg2, arg3, arg4) {
+    arguments = Args.parse("arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp");
+
+    // Then the new 'arguments' have been exactly what you need.
+    console.log(arguments);
+}
+
+func(
+    1, 
+    ['hello', 'zvargs'],
+    // args2 isn't specified.
+    function() {
+        if (arg1) console.log(arg1);
+    }, 
+    /search/,
+    'extra_arg0',
+    'extra_arg1'
+);
+```
+
+The above code snippet will print out:
+
+```
+{
+    1,                                             // 'arg0'
+    ['hello', 'zvargs'],                           // 'arg1' 
+    null,                                          // 'arg2' 
+    function() { if (arg1) console.log(arg1); },   // 'arg3'     
+    /search/,                                      // 'arg4' 
+    'extra_arg0',                                  //
+    'extra_arg1'                                   //  
+}
+```
 
