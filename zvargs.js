@@ -4,8 +4,37 @@
 module.exports.VArgs = VArgs;
 
 function VArgs(args, spec) {
+    this.__arguments = [];
     var i, j;
+
+    if (typeof spec == 'string') {
+        spec = spec.split(',').map(function(s) {
+            s = s.trim();
+            m = s.match(/^(\[)?\s*(\w*)\s*\:\s*(\w*)\s*(\])?$/);
+            if (m) {
+                if (m[1] === '[' && m[4] === ']') {
+                    s = {'name': m[2], 'type': m[3], 'optional': true};
+                } else {
+                    s = {'name': m[2], 'type': m[3]};
+                }
+
+                if (   s.type !== 'number' 
+                    && s.type !== 'string' 
+                    && s.type !== 'boolean' 
+                    && s.type !== 'function' 
+                    && s.type !== 'object' 
+                    && s.type !== 'symbol') {
+
+                    s.type = eval(s.type);
+                }
+
+                return s;
+            }
+        });
+    }
+
     for (j = 0; j < spec.length; j ++) {
+        this.__arguments[j] = null;
         this[spec[j].name] = null;
     }
     
@@ -34,6 +63,7 @@ function VArgs(args, spec) {
             }
 
             // matched
+            this.__arguments[j] = args[i];
             this[spec[j++].name] = args[i];
             break;
         }
@@ -43,7 +73,6 @@ function VArgs(args, spec) {
     for(;j < spec.length; j++) {
        if (!spec[j].hasOwnProperty('optional') || !spec[j].optional) {
            throw "Error: not all mandatory arguments are passed";
-           continue;
        }
     }
 
@@ -52,5 +81,8 @@ function VArgs(args, spec) {
     // Stores remaining args items in `extra`.
     if (i < args.length) {
         this.__extra = Array.prototype.slice.call(args, i);
+        this.__arguments = this.__arguments.concat(this.__extra);
     }
+
 }
+
