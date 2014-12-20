@@ -96,7 +96,7 @@ All mandatory arguments defined in `spec` must be passed in the function call, o
 <a name="VArgs.parse" />
 ####parse(args, spec)
 
-This method is a static function, which acts the similar way as the contructor but returns a new `arguments`. This new `arguments` has all arguments of a function's variable argument prototype assinged with the corresponding values passed by a function call. 
+This method is a static function, which acts the similar way as the contructor but returns a new `arguments`. This new `arguments` has all arguments of a function's variable arguments prototype assinged with the corresponding values passed by a function call. 
 
 This method may give a simply way for a function definition to use the passed `arguments`. For instance, for the following function prototype:
 
