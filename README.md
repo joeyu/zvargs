@@ -119,7 +119,7 @@ function func(arg0, arg1, arg2, arg3, arg4) {
 
 #####Return
 
-An `Array` object of `arguments`. The `Array` object has all arugments of a function's variable arguments prototype assigned with the corresponding values of passed by a function call. The optional arguments not assigned will by set to `null`. 
+An `Array` object of `arguments`. The `Array` object has all arguments of a function's variable arguments prototype assigned with the corresponding values of passed by a function call. The optional arguments that were not passed with values will be set to `null`. 
 
 ###Examples
 
