@@ -155,7 +155,7 @@ The above code snippet will print out:
 }
 ```
 
-Alternatively, another approach to use can be:
+Alternatively, another simple approach can be:
 
 ```javascript
 var zvargs = require('zvargs');

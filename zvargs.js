@@ -24,22 +24,21 @@ function parse(args, spec, thisObj) {
                     s = {'name': m[2], 'type': m[3]};
                 }
 
-                if (   s.type !== 'number' 
-                    && s.type !== 'string' 
-                    && s.type !== 'boolean' 
-                    && s.type !== 'function' 
-                    && s.type !== 'object' 
-                    && s.type !== 'symbol') {
-
-                    s.type = eval(s.type);
-                }
-
                 return s;
             }
         });
     }
 
     for (j = 0; j < spec.length; j ++) {
+        if (   spec[j].type !== 'number' 
+            && spec[j].type !== 'string' 
+            && spec[j].type !== 'boolean' 
+            && spec[j].type !== 'function' 
+            && spec[j].type !== 'object' 
+            && spec[j].type !== 'symbol'
+        ) {
+            spec[j].type = eval(spec[j].type);
+        }
         thisObj.__arguments[j] = null;
         thisObj[spec[j].name] = null;
     }
