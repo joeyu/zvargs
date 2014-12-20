@@ -96,7 +96,7 @@ All mandatory arguments defined in `spec` must be passed in the function call, o
 <a name="VArgs.parse" />
 ####parse(args, spec)
 
-This method is a static function, which acts the similar way as the contructor but returns a new `arguments`. This new `arguments` has all arguments of a function's variable argument prototype asinged with corresponding values passed by a function call. 
+This method is a static function, which acts the similar way as the contructor but returns a new `arguments`. This new `arguments` has all arguments of a function's variable argument prototype assinged with the corresponding values passed by a function call. 
 
 This method may give a simply way for a function definition to use the passed `arguments`. For instance, for the following function prototype:
 
@@ -104,7 +104,6 @@ This method may give a simply way for a function definition to use the passed `a
 >function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
 
 The function definition can simply be:
-
 
 ```javascript
 var zvargs = require('zvargs');
@@ -117,6 +116,10 @@ function func(arg0, arg1, arg2, arg3, arg4) {
     //...
 }
 ```
+
+#####Return
+
+An `Array` object of `arguments`. The `Array` object has all arugments of a function's variable arguments prototype assigned with the corresponding values of passed by a function call. The optional arguments not assigned will by set to `null`. 
 
 ###Examples
 
