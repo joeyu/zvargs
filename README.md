@@ -21,6 +21,7 @@ VArgs
 Method                                  | Brief
 :---------------------------------------|:-----
 [`VArgs`](#VArgs.constructor)           |The constructor method.
+[`VArgs.parse`](#VArgs.parse)           |The parser function, which is a static method of clss `VArgs`
 
 
 <hr>
@@ -91,6 +92,31 @@ All mandatory arguments defined in `spec` must be passed in the function call, o
     "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp"
 
     ```
+
+<a name="VArgs.parse" />
+####parse(args, spec)
+
+This method is a static function, which acts the similar way as the contructor but returns a new `arguments`. This new `arguments` has all arguments of a function's variable argument prototype asinged with corresponding values passed by a function call. 
+
+This method may give a simply way for a function definition to use the passed `arguments`. For instance, for the following function prototype:
+
+
+>function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
+
+The function definition can simply be:
+
+
+```javascript
+var zvargs = require('zvargs');
+function func(arg0, arg1, arg2, arg3, arg4) {
+    arguments = zvargs.Args.parse(arguments, "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp");
+
+    // Then `arg0`, `arg1`, `arg2`, `arg3`, `arg4` can be referenced now.
+    // And the arguments following `arg4` can be referenced by `argument[5]`, `arguments[6]`...
+    //
+    //...
+}
+```
 
 ###Examples
 
