@@ -4,7 +4,13 @@
 module.exports.VArgs = VArgs;
 
 function VArgs(args, spec) {
-    this.__arguments = [];
+    parse(args, spec, this);
+}
+VArgs.parse = parse;
+
+function parse(args, spec, thisObj) {
+    thisObj = thisObj || {};
+    thisObj.__arguments = [];
     var i, j;
 
     if (typeof spec == 'string') {
@@ -34,8 +40,8 @@ function VArgs(args, spec) {
     }
 
     for (j = 0; j < spec.length; j ++) {
-        this.__arguments[j] = null;
-        this[spec[j].name] = null;
+        thisObj.__arguments[j] = null;
+        thisObj[spec[j].name] = null;
     }
     
     for (i = j = 0; i < args.length && j < spec.length; i ++) {
@@ -63,8 +69,8 @@ function VArgs(args, spec) {
             }
 
             // matched
-            this.__arguments[j] = args[i];
-            this[spec[j++].name] = args[i];
+            thisObj.__arguments[j] = args[i];
+            thisObj[spec[j++].name] = args[i];
             break;
         }
     }
@@ -77,12 +83,13 @@ function VArgs(args, spec) {
     }
 
 
-    this.__extra = null;
+    thisObj.__extra = null;
     // Stores remaining args items in `extra`.
     if (i < args.length) {
-        this.__extra = Array.prototype.slice.call(args, i);
-        this.__arguments = this.__arguments.concat(this.__extra);
+        thisObj.__extra = Array.prototype.slice.call(args, i);
+        thisObj.__arguments = thisObj.__arguments.concat(thisObj.__extra);
     }
 
+    return thisObj.__arguments;
 }
 
