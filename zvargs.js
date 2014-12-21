@@ -11,12 +11,12 @@ VArgs.parse = parse;
 function parse(args, proto, thisObj) {
     thisObj = thisObj || {};
     thisObj.__arguments = [];
-    var i, j;
+    var i, j, k;
 
-    if (typeof proto == 'string') {
+    if (typeof proto === 'string') {
         proto = proto.split(',').map(function(s) {
             s = s.trim();
-            m = s.match(/^(\[)?\s*(\w*)\s*\:\s*(\w*)\s*(\])?$/);
+            m = s.match(/^(\[)?\s*(\w*)\s*\:([^\]]+)(\])?$/);
             if (m) {
                 if (m[1] === '[' && m[4] === ']') {
                     s = {'name': m[2], 'type': m[3], 'optional': true};
@@ -24,37 +24,55 @@ function parse(args, proto, thisObj) {
                     s = {'name': m[2], 'type': m[3]};
                 }
 
+                s.type = s.type.split('|').map(function(t) {
+                    return t.trim();
+                });
+                    
+
                 return s;
             }
         });
     }
 
     for (j = 0; j < proto.length; j ++) {
-        if (   proto[j].type !== 'number' 
-            && proto[j].type !== 'string' 
-            && proto[j].type !== 'boolean' 
-            && proto[j].type !== 'function' 
-            && proto[j].type !== 'object' 
-            && proto[j].type !== 'symbol'
-        ) {
-            proto[j].type = eval(proto[j].type);
+        if (!(proto[j].type instanceof Array)) {
+            proto[j].type = [proto[j].type];
         }
+
+        proto[j].type = proto[j].type.map(function (s) {
+            if (   typeof s === 'string'
+                && s !== 'number' 
+                && s !== 'string' 
+                && s !== 'boolean' 
+                && s !== 'function' 
+                && s !== 'object' 
+                && s !== 'symbol'
+            ) {
+                s = eval(s);
+            }
+
+            return s;
+        });
         thisObj.__arguments[j] = null;
         thisObj[proto[j].name] = null;
     }
-    
+
     for (i = j = 0; i < args.length && j < proto.length; i ++) {
         while (j < proto.length) {
-            var isMatched = true;
+            var isMatched = false;
 
-            // test type
-            if (typeof proto[j].type === 'string') {
-               if (typeof args[i] !== proto[j].type) {
-                   isMatched = false;
-               }
-            } else if ( proto[j].type instanceof Function) {
-                if (!(args[i] instanceof proto[j].type)) {
-                    isMatched = false;
+            // Tests type
+            for (k = 0; k < proto[j].type.length; k ++ ) {
+                if (typeof proto[j].type[k] === 'string') {
+                   if (typeof args[i] === proto[j].type[k]) {
+                       isMatched = true;
+                       break;
+                   }
+                } else if (proto[j].type[k] instanceof Function) {
+                    if (args[i] instanceof proto[j].type[k]) {
+                        isMatched = true;
+                        break;
+                    }
                 }
             }
 
@@ -65,12 +83,12 @@ function parse(args, proto, thisObj) {
                 } else {
                     throw "Error: mismatching";
                 }
+            } else {
+                // matched
+                thisObj.__arguments[j]   = args[i];
+                thisObj[proto[j++].name] = args[i];
+                break;
             }
-
-            // matched
-            thisObj.__arguments[j] = args[i];
-            thisObj[proto[j++].name] = args[i];
-            break;
         }
     }
 

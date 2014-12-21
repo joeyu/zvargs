@@ -4,9 +4,9 @@ Zhou's node.js module for parsing variable arguments of functions.
 
 Function's variable arguments prototype refers to arguments prototype that mix mandatory arguments and optional arguments. The following is an example:
 
->function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
+>function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp|string, ...);   
 
-where, the modifier after ':' of each argument specifies the argument's type (class), and the arguments enclosed in the square brackets are optional and may not be passed when the `func` function is called.
+Where, the arguments enclosed in the square brackets are optional and may not be passed when the `func` function is called; and, the modifier after ':' of each argument specifies the argument's type (class); and `arg4` are specified with multi-types (i.e. RegExp and string) separated by '|'.
 
 An example of such kind of function is that you have a function called `traverse`, which traverses a directory tree specified by `dir` and applies a callback function specified by `callback` to each of file node under that directory. And the user can also specify some options through an `options` object, which is optional and has default values. The `traverse` function's arguments prototype can thus be defined as follows:
 
@@ -67,11 +67,13 @@ All mandatory arguments defined in `proto` must be passed in the function call, 
         
         The name of the argument. If an argument matches the `proto` item, a new property named after the valule of `name` will be added to the `this` object, and its value will be the matched argument.
 
-  * `type` : `built-in type string | Function`
+  * `type` : `built-in type string | Function | Array of built-in type string's and Function's`
   
         This `type` property is used to specify the javascript built-in type or `Object` class of the argument.
         
         If the argument is an `Object` (i.e., `typeof === 'object'`), specifying a `Function` object will allow to more precisely indicate what class it is.
+
+        An `Array` of built-in type string's and `Function`'s can be used to specify the arguments can be any type in that `Array`. 
 
   * [`optional=false`] : `Boolean`
 
@@ -79,7 +81,7 @@ All mandatory arguments defined in `proto` must be passed in the function call, 
 
     Example: for a function variable prototype as follows,
 
-    >function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
+    >function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp|string, ...);   
 
     The `proto` will be:
 
@@ -89,14 +91,14 @@ All mandatory arguments defined in `proto` must be passed in the function call, 
         {'name': 'arg1', 'type':    Array,      'optional': true},
         {'name': 'arg2', 'type':    'string',   'optional': true},
         {'name': 'arg3', 'type':    'function'},
-        {'name': 'arg4', 'type':    RegExp},
+        {'name': 'arg4', 'type':    [RegExp, 'string']},
     ]
     ```
     
     If `proto` is a string, the above example can simply be:
 
     ```javascript
-    "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp"
+    "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp|string"
 
     ```
 
@@ -115,9 +117,9 @@ The function definition can simply be:
 ```javascript
 var zvargs = require('zvargs');
 function func(arg0, arg1, arg2, arg3, arg4) {
-    arguments = zvargs.Args.parse(arguments, "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp");
+    arguments = zvargs.Args.parse(arguments, "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp|string");
 
-    // Then `arg0`, `arg1`, `arg2`, `arg3`, `arg4` can be referenced now.
+    // Then `arg0`, `arg1`, `arg2`, `arg3`, `arg4` can be referenced normally.
     // And the arguments following `arg4` can be referenced by `argument[5]`, `arguments[6]`...
     //
     //...
@@ -131,11 +133,11 @@ An `Array` object of `arguments`. The `Array` object has all arguments of a func
 ###Examples
 
 ```javascript
-(function( /* arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...*/ ) {
+(function( /* arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp|string, ...*/ ) {
     var zvargs = require('zvargs');
     var args = new zvargs.VArgs(
         arguments, 
-        "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp"
+        "arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp|string"
     );
 
     console.log(args);
@@ -170,7 +172,7 @@ Alternatively, another simple approach can be:
 ```javascript
 var zvargs = require('zvargs');
 function func(arg0, arg1, arg2, arg3, arg4) {
-    arguments = zvargs.Args.parse("arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp");
+    arguments = zvargs.Args.parse("arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp|string");
 
     // Then the new 'arguments' have been exactly what you need.
     console.log(arguments);
