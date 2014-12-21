@@ -163,7 +163,7 @@ Alternatively, another simple approach can be:
 ```javascript
 var zvargs = require('zvargs');
 function func(arg0, arg1, arg2, arg3, arg4) {
-    arguments = Args.parse("arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp");
+    arguments = zvargs.Args.parse("arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp");
 
     // Then the new 'arguments' have been exactly what you need.
     console.log(arguments);
