@@ -21,7 +21,7 @@ VArgs
 Method                                  | Brief
 :---------------------------------------|:-----
 [`VArgs`](#VArgs.constructor)           |The constructor method.
-[`VArgs.parse`](#VArgs.parse)           |The parser function, which is a static method of clss `VArgs`
+[`VArgs.parse`](#VArgs.parse)           |The parser function, which is a static method of class `VArgs`
 
 
 <hr>
@@ -36,6 +36,10 @@ Function's variable arguments prototype refers to arguments prototype that mix m
 >function func(arg0:number, [arg1:Array], [arg2:string], arg3:function, arg4:RegExp, ...);   
 
 where, the modifier after ':' of each argument specifies the argument's type (class), and the arguments enclosed in the square brackets are optional and may not be passed when the `func` function is called.
+
+An example of such kind of function is that you have a function called `traverse`, which traverses a directory tree specified by `dir` and applies a callback function specified by `callback` to each of file node under that directory. And the user can also specify some options through an `options` object, which is optional and has default values. The `traverse` function's arguments prototype are thus variable as follows:
+
+>function traverse(dir:string, [options:object], callback:function);
 
 The specification of a function's variable arguments prototype can be specified by an array as the `spec` argument passed to this contructor. Each item of `spec` corresponds to one argument of the function's arguments prototype. To reduce typing effort, the `spec` can also be specified as a string. 
   
